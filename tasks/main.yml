@@ -15,3 +15,18 @@
   when:
     - want_docker
     - ansible_system == 'Linux'
+
+
+# or try (stable):
+#
+#  curl -fsSL https://get.docker.com -o get-docker.sh
+#  DRY_RUN=1 sh ./get-docker.sh
+
+# or try (pre-release):
+#
+#  curl -fsSL https://test.docker.com -o test-docker.sh
+#  sudo sh test-docker.sh
+
+# test install with:
+#
+#  sudo docker run hello-world
