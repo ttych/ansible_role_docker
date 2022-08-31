@@ -4,3 +4,10 @@
   package:
     name: "{{ docker_legacy_packages }}"
     state: absent
+
+- name: purge legacy location for images, containers, volumes
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ docker_legacy_directories }}"
+  when: docker_legacy_purge

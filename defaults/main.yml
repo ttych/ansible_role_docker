@@ -8,3 +8,8 @@ docker_legacy_packages:
   - docker.io
   - containerd
   - runc
+
+docker_legacy_purge: no
+docker_legacy_directories:
+  - /var/lib/docker
+  - /var/lib/containerd
