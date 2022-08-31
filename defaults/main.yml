@@ -1,6 +1,6 @@
 ---
 
-want_docker: yes
+want_docker: no
 
 docker_legacy_packages:
   - docker
