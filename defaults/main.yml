@@ -1,2 +1,10 @@
 ---
-# defaults file for ansible_role_docker
+
+want_docker: yes
+
+docker_legacy_packages:
+  - docker
+  - docker-engine
+  - docker.io
+  - containerd
+  - runc

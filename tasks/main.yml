@@ -14,4 +14,4 @@
         has_docker: true
   when:
     - want_docker
-    - ansible_system == 'FreeBSD'
+    - ansible_system == 'Linux'
