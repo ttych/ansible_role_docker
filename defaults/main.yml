@@ -8,6 +8,12 @@ docker_legacy_packages:
   - docker.io
   - containerd
   - runc
+  - docker-client
+  - docker-client-latest
+  - docker-common
+  - docker-latest
+  - docker-latest-logrotate
+  - docker-logrotate
 docker_legacy_purge: no
 docker_legacy_directories:
   - /var/lib/docker
@@ -26,6 +32,6 @@ docker_packages:
   - docker-compose-plugin
 
 repo_keyring_url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
-repo_url: "https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }}"
+repo_url: "https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower | regex_replace('redhat', 'rhel', ignorecase=True) }}"
 apt_keyrings_dir: /etc/apt/keyrings
 apt_keyrings_docker: "{{ apt_keyrings_dir }}/docker.gpg"

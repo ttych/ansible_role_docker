@@ -72,8 +72,25 @@
 
   when: ansible_pkg_mgr == 'apt'
 
+
+- name: configure docker YUM repositories
+  block:
+    - name: deploy docker repository
+      yum_repository:
+        name: docker-ce
+        description: docker-ce
+        baseurl: "{{ repo_url }}/docker-ce.repo"
+
+  when: ansible_pkg_mgr == 'yum'
+
+
 - name: install docker
   package:
     name: "{{ docker_packages }}"
     state: latest
 
+
+# FIXME: docker storage
+# /etc/docker/daemon.json
+# {"data-root": "/....." }
+# service stop / start arrount ^
