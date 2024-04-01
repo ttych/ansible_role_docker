@@ -1,20 +1,17 @@
 ---
 
-- name: set has_docker to false (default)
-  set_fact:
-    has_docker: false
-
-- include_tasks: context.yml
-
 - block:
+    - include_tasks: context.yml
+
     - include_tasks: docker.yml
 
-    - name: set has_docker to true
-      set_fact:
-        has_docker: true
   when:
     - want_docker
     - ansible_system == 'Linux'
+
+- name: set has_docker
+  set_fact:
+    has_docker: "{{ want_clamav and ansible_system == 'Linux' }}"
 
 
 # or try (stable):
