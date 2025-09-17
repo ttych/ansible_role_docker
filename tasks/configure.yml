@@ -1,0 +1,10 @@
+---
+
+- name: deploy Docker daemon json
+  ansible.builtin.template:
+    src: 'docker/daemon.json'
+    dest: "{{ docker_conf_dir }}/daemon.json"
+    owner: root
+    group: root
+    mode: '0644'
+  register: t_docker_conf_daemon

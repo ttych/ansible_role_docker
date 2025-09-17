@@ -1,0 +1,15 @@
+---
+
+- name: ensure Docker service
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+  register: t_workstation_docker_service
+
+- name: restart Docker service on change
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+    enabled: yes
+  when: t_docker_conf_daemon.changed and not t_workstation_docker_service.changed

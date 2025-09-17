@@ -1,0 +1,11 @@
+---
+
+- name: install requirements
+  ansible.builtin.package:
+    name: "{{ docker_requirements_packages }}"
+    state: latest
+
+- name: install Docker packages
+  ansible.builtin.package:
+    name: "{{ docker_packages }}"
+    state: present

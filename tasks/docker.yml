@@ -1,96 +1,13 @@
 ---
 
-- name: remove legacy packages
-  package:
-    name: "{{ docker_legacy_packages }}"
-    state: absent
+- include_tasks: clean_legacy.yml
 
-- name: purge legacy location for images, containers, volumes
-  file:
-    path: "{{ item }}"
-    state: absent
-  loop: "{{ docker_legacy_directories }}"
-  when: docker_legacy_purge
+- include_tasks: apt_repository.yml
 
-- name: install requirements
-  package:
-    name: "{{ docker_packages_requirements }}"
-    state: latest
+- include_tasks: install.yml
 
-- name: configure docker APT repositories
-  block:
-    - name: have keyrings dir
-      file:
-        path: "{{ apt_keyrings_dir }}"
-        state: directory
-        owner: root
-        group: 0
-        mode: '0755'
+- include_tasks: configure.yml
 
-    - name: download docker "{{ ansible_distribution }}" gpg keys
-      get_url:
-        url: "{{ repo_keyring_url }}"
-        dest: "/tmp/docker.{{ ansible_distribution }}.gpg"
-        mode: '0644'
-      changed_when: no
+- include_tasks: service.yml
 
-    - name: dearmor gpg keys
-      command:
-        cmd: "gpg --batch --yes --dearmor -o /tmp/docker.{{ ansible_distribution }}.gpg.d /tmp/docker.{{ ansible_distribution }}.gpg"
-      changed_when: no
-
-    - name: deploy docker gpg keys
-      copy:
-        src: "/tmp/docker.{{ ansible_distribution }}.gpg.d"
-        dest: "/etc/apt/keyrings/docker.gpg"
-        remote_src: yes
-        owner: root
-        group: 0
-        mode: '0644'
-
-    - name: clean tmp gpg keys
-      file:
-        path: "{{ item }}"
-        state: absent
-      loop:
-        - "/tmp/docker.{{ ansible_distribution }}.gpg"
-        - "/tmp/docker.{{ ansible_distribution }}.gpg.d"
-      changed_when: no
-
-    - name: get dpkg architecture
-      command:
-        cmd: dpkg --print-architecture
-      register: dpkg_architecture
-      changed_when: no
-
-    - name: deploy docker apt source
-      apt_repository:
-        filename: docker
-        mode: '0644'
-        repo: "deb [arch={{ dpkg_architecture.stdout }} signed-by={{apt_keyrings_docker}}] {{ repo_url }} {{ ansible_distribution_release }} stable"
-        state: present
-
-  when: ansible_pkg_mgr == 'apt'
-
-
-- name: configure docker YUM repositories
-  block:
-    - name: deploy docker repository
-      yum_repository:
-        name: docker-ce
-        description: docker-ce
-        baseurl: "{{ repo_url }}/docker-ce.repo"
-
-  when: ansible_pkg_mgr == 'yum'
-
-
-- name: install docker
-  package:
-    name: "{{ docker_packages }}"
-    state: latest
-
-
-# FIXME: docker storage
-# /etc/docker/daemon.json
-# {"data-root": "/....." }
-# service stop / start arrount ^
+- include_tasks: permission.yml

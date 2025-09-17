@@ -11,19 +11,4 @@
 
 - name: set has_docker
   set_fact:
-    has_docker: "{{ want_clamav and ansible_system == 'Linux' }}"
-
-
-# or try (stable):
-#
-#  curl -fsSL https://get.docker.com -o get-docker.sh
-#  DRY_RUN=1 sh ./get-docker.sh
-
-# or try (pre-release):
-#
-#  curl -fsSL https://test.docker.com -o test-docker.sh
-#  sudo sh test-docker.sh
-
-# test install with:
-#
-#  sudo docker run hello-world
+    has_docker: "{{ want_docker and ansible_system == 'Linux' }}"

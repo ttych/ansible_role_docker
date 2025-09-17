@@ -1,0 +1,49 @@
+---
+
+docker_legacy_packages:
+  - docker
+  - docker-engine
+  - docker.io
+  - containerd
+  - runc
+  - docker-client
+  - docker-client-latest
+  - docker-common
+  - docker-latest
+  - docker-latest-logrotate
+  - docker-logrotate
+
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+  - docker-ce-rootless-extras
+  - docker-model-plugin
+
+docker_requirements_packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+
+
+
+docker_gpg_key_url: "https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }}/gpg"
+docker_gpg_key_filename: docker.asc
+docker_repository_url: "https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }}"
+docker_repository_apt_filename: docker
+docker_arch_map:
+  x86_64: amd64
+docker_repository_apt_defintion: "deb [arch={{ docker_arch_map[ansible_architecture] }} signed-by={{ apt_keyring_directory }}/{{ docker_gpg_key_filename }}] {{ docker_repository_url }} {{ ansible_distribution_release }} stable"
+
+
+
+docker_conf_dir: /etc/docker
+docker_log_max_size: 10m
+docker_log_max_file: 5
+
+
+
+docker_users: []
