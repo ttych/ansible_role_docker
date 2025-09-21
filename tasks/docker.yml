@@ -2,6 +2,8 @@
 
 - include_tasks: clean_legacy.yml
 
+- include_tasks: zfs.yml
+
 - include_tasks: apt_repository.yml
 
 - include_tasks: install.yml

@@ -12,4 +12,6 @@
     name: docker
     state: restarted
     enabled: yes
-  when: t_docker_conf_daemon.changed and not t_workstation_docker_service.changed
+  when:
+    - t_docker_conf_daemon.changed or t_docker_zfs_dataset.changed or t_docker_zfs_mount.changed
+    - not t_workstation_docker_service.changed

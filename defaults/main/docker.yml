@@ -40,9 +40,24 @@ docker_repository_apt_defintion: "deb [arch={{ docker_arch_map[ansible_architect
 
 
 
+docker_data_dir: /var/lib/docker
+
 docker_conf_dir: /etc/docker
+docker_storage_driver: overlay2
 docker_log_max_size: 10m
 docker_log_max_file: 5
+
+
+
+docker_on_zfs: yes
+docker_zfs_dataset: zroot/DATA/docker
+docker_zfs_properties:
+  compression: "lz4"
+  sharenfs: off
+  sharesmb: off
+  atime: off
+  relatime: off
+  recordsize: 128k
 
 
 

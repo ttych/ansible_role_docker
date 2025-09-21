@@ -1,0 +1,63 @@
+---
+
+- block:
+
+    - name: get docker_data_dir dataset
+      ansible.builtin.shell: zfs list -H "{{ docker_data_dir }}" | awk '$5 == "{{ docker_data_dir }}" {print $1}'
+      register: t_docker_zfs_data_dir_dataset
+      changed_when: no
+      ignore_errors: yes
+
+
+    - block:
+
+        - name: set docker_zfs_dataset
+          ansible.builtin.set_fact:
+            docker_zfs_dataset: "{{ t_docker_zfs_data_dir_dataset.stdout }}"
+
+      when: t_docker_zfs_data_dir_dataset.stdout != ""
+
+
+    - block:
+
+        - name: get parent dataset
+          ansible.builtin.shell: zfs list -H "{{ docker_data_dir }}" | awk '{print $1}'
+          register: t_docker_zfs_data_dir_parent_dataset
+          changed_when: no
+          ignore_errors: yes
+
+        - name: set docker_zfs_dataset
+          ansible.builtin.set_fact:
+            docker_zfs_dataset: "{{ t_docker_zfs_data_dir_parent_dataset.stdout }}/docker"
+
+      when:
+        - t_docker_zfs_data_dir_dataset.stdout == ""
+        - not docker_zfs_dataset or docker_zfs_dataset == ""
+
+
+    - block:
+
+        - name: create dataset
+          community.general.zfs:
+            name: "{{ docker_zfs_dataset }}"
+            state: present
+            extra_zfs_properties: "{{ docker_zfs_properties | combine({ 'mountpoint': docker_data_dir }) }}"
+          register: t_docker_zfs_dataset
+
+        - name: check mount state for dataset
+          ansible.builtin.command: "zfs get -H -o value mounted {{ docker_zfs_dataset }}"
+          register: t_docker_zfs_mount_status
+          changed_when: false
+
+        - name: mount dataset
+          ansible.builtin.command: "zfs mount {{ docker_zfs_dataset }}"
+          register: t_docker_zfs_mount
+          when: t_docker_zfs_mount_status.stdout != "yes"
+
+        - name: set storage-driver
+          set_fact:
+            docker_storage_driver: zfs
+
+      when: docker_zfs_dataset and docker_zfs_dataset != ""
+
+  when: docker_on_zfs
