@@ -50,7 +50,7 @@ docker_log_max_file: 5
 
 
 docker_on_zfs: yes
-docker_zfs_dataset: zroot/DATA/docker
+docker_zfs_dataset: zroot/APP/docker
 docker_zfs_properties:
   compression: "lz4"
   sharenfs: off
