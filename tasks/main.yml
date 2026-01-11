@@ -7,8 +7,8 @@
 
   when:
     - want_docker
-    - ansible_system == 'Linux'
+    - ansible_facts.system == 'Linux'
 
 - name: set has_docker
   set_fact:
-    has_docker: "{{ want_docker and ansible_system == 'Linux' }}"
+    has_docker: "{{ want_docker and ansible_facts.system == 'Linux' }}"
