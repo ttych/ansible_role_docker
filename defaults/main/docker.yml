@@ -46,6 +46,7 @@ docker_conf_dir: /etc/docker
 docker_storage_driver: overlay2
 docker_log_max_size: 10m
 docker_log_max_file: 5
+docker_firewall: nftables
 
 
 
