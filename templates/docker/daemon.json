@@ -1,4 +1,5 @@
 {
+    "userns-remap": "{{ docker_userns_remap }}",
     "storage-driver": "{{ docker_storage_driver }}",
 {% if docker_firewall == 'nftables' %}
     "iptables": true,

@@ -48,7 +48,7 @@ docker_log_max_size: 10m
 docker_log_max_file: 5
 docker_firewall: nftables
 
-
+docker_userns_remap: disabled
 
 docker_on_zfs: yes
 docker_zfs_dataset: zroot/APP/docker
